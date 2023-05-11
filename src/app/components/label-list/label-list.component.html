@@ -1,0 +1,113 @@
+<!-- <div class="content">
+    <input class="input" nz-input placeholder="dpmm" [(ngModel)]="dpmm" />
+    <input class="input" nz-input placeholder="width" [(ngModel)]="width" />
+    <input class="input" nz-input placeholder="height" [(ngModel)]="height" />
+    <input class="input" nz-input placeholder="index" [(ngModel)]="index" />
+    <input class="input" nz-input placeholder="zplcode" [(ngModel)]="zplcode" />
+    <button class="button" nz-button nzType="primary" (click)="print()">Primary Button</button>
+</div> -->
+<div class="content">
+    <div class="labelList">
+        <div class="chooselabel">
+            <nz-select class="select selectLabel" [ngModel]="labelName" (ngModelChange)="onChangeLabel($event)" nzPlaceHolder="Select from list">
+                <nz-option *ngFor="let label of labelNameList" [nzValue]="label" [nzLabel]="label"></nz-option>
+            </nz-select>
+        </div>
+        <div class="chooseTemplate" [ngClass]="{ 'hide': shouldShowTemplate === false}">
+            <div class="">
+                <nz-select class="select selectTemplate" [ngModel]="templateName" (ngModelChange)="onChangeTemplate($event)" nzPlaceHolder="Select from list">
+                    <nz-option *ngFor="let template of templateNameList" [nzValue]="template?.labelName" [nzLabel]="template?.labelName!"></nz-option>
+                </nz-select>
+            </div>
+            <div class="templateContent">
+                <div *ngIf="templateName">
+                    Template: {{templateName}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="label-design">
+        <div class="labelSizeSetting">
+            <div class="labelSize">
+                <div class="labelFormInput">Width</div>
+                <input type="number" nz-input placeholder="Label width" [(ngModel)]="widthLabel" (ngModelChange)="onChangeWidthBoundary($event)" />
+            </div>
+            <div class="labelSize">
+                <div class="labelFormInput">Height</div>
+                <input type="number" nz-input placeholder="Label height" [(ngModel)]="heightLabel" (ngModelChange)="onChangeHeightBoundary($event)" />
+            </div>
+            <div class="labelSize">
+                <div class="labelFormInput">Print density (dpmm)</div>
+                <input type="number" nz-input placeholder="Print density (dpmm)" [(ngModel)]="dpmm" (ngModelChange)="onChangeDensity()" />
+            </div>
+        </div>
+        <div class="example-boundary" [ngStyle]="{'width.px': widthBoundary, 'height.px': heightBoundary}">
+            <div *ngFor="let text of textTemplates; let i=index" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: text?.positionX!, y:text?.positionY!}" [ngStyle]="{'font-size.px': text?.textSize, 'font-family': text?.textFont}"
+                (click)="activateTextLabel(text,i)" (cdkDragEnded)="onDragEnd($event,text,i)">
+                {{text?.textContent}}
+            </div>
+
+
+            <ngx-barcode *ngFor="let barcode of barcodeTemplate; let i=index" [bc-value]="barcode?.bcValue!" bc-format="CODE128B" [bc-display-value]="true" [bc-width]="barcode?.bcWidth!" [bc-height]="barcode?.bcHeight! || 1" [bc-font]="barcode?.bcTextFont!" [bc-font-size]="barcode?.bcTextSize!"
+                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" [bc-text-margin]="0" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
+                (click)="activateBarcodeLabel(barcode,i)" (cdkDragEnded)="onDragEnd($event,barcode,i)"></ngx-barcode>
+
+        </div>
+        <div class="tool-design">
+            <button class="btn" nz-button nzType="primary" (click)="addTextLabel()">Add text</button>
+            <button class="btn" nz-button nzType="primary" (click)="addBarcodeLabel()">Add barcode</button>
+            <button class="btn" nz-button nzType="primary" [disabled]="!isTextChoosen && !isBarcodeChoosen" (click)="remove()">Remove</button>
+        </div>
+    </div>
+
+    <div class="labelDetail">
+        <span>Label detail</span>
+        <div class="modifyLabel">
+            <div *ngIf="isTextChoosen" class="form">
+                <div class="labelForm">
+                    <div class="labelFormInput">Text name</div>
+                    <input type="text" nz-input placeholder="Text name" id="textName" [(ngModel)]="textName" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text size</div>
+                    <input type="number" nz-input placeholder="Text size" [(ngModel)]="textSize" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text font</div>
+                    <input type="text" nz-input placeholder="Text font" [(ngModel)]="textFont" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text content</div>
+                    <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" />
+                </div>
+            </div>
+            <div *ngIf="isBarcodeChoosen" class="form">
+                <div class="labelForm">
+                    <div class="labelFormInput">Barcode value</div>
+                    <input type="text" nz-input placeholder="Barcode value" [(ngModel)]="bcValue" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Barcode width</div>
+                    <input type="number" nz-input placeholder="Barcode width" [(ngModel)]="bcWidth" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Barcode height</div>
+                    <input type="number" nz-input placeholder="Barcode height" [(ngModel)]="bcHeight" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text size</div>
+                    <input type="number" nz-input placeholder="Text size" [(ngModel)]="textSize" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text font</div>
+                    <input type="text" nz-input placeholder="Text font" [(ngModel)]="textFont" (keyup)="changeText()" />
+                </div>
+            </div>
+        </div>
+        <div class="tool-design">
+            <button class="btn" nz-button nzType="primary" (click)="generateZpl()">Generate zpl</button>
+        </div>
+    </div>
+
+</div>

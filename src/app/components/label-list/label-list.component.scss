@@ -1,0 +1,74 @@
+.input {
+    width: 200px;
+    margin-top: 10px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn {
+    min-width: 100px;
+    margin: 10px 10px 0 0;
+}
+
+.select {
+    width: 200px;
+}
+
+.chooseTemplate.hide {
+    display: none;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+}
+
+.label-design {
+    margin-left: 20px;
+}
+
+.labelSizeSetting {
+    display: flex;
+    width: 600px;
+    margin-bottom: 10px;
+}
+
+.labelSize {
+    width: 150px;
+    margin-right: 10px;
+}
+
+.example-box {
+    color: rgba(0, 0, 0, 0.87);
+    cursor: move;
+    display: inline-flex;
+    line-height: normal;
+    position: absolute;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.example-boundary {
+    min-height: 100px;
+    min-width: 300px;
+    border: solid 1px;
+}
+
+.labelDetail {
+    margin-left: 24px;
+}
+
+.modifyLabel {
+    min-height: 400px;
+    min-width: 300px;
+    border: solid 1px;
+    margin-top: 10px;
+}
+
+.labelForm {
+    margin: 0 8px 8px 8px;
+}
