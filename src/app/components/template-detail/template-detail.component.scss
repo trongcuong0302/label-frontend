@@ -3,12 +3,6 @@
     margin-top: 10px;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .btn {
     min-width: 100px;
     margin: 10px 10px 0 0;
@@ -28,47 +22,55 @@
 }
 
 .label-design {
-    margin-left: 20px;
-}
-
-.labelSizeSetting {
-    display: flex;
-    width: 600px;
-    margin-bottom: 10px;
-}
-
-.labelSize {
-    width: 150px;
-    margin-right: 10px;
+    margin: 24px 0 0 24px;
 }
 
 .example-box {
     color: rgba(0, 0, 0, 0.87);
+    border: dotted 1px;
     cursor: move;
     display: inline-flex;
-    line-height: normal;
+    line-height: 0.7;
     position: absolute;
     z-index: 1;
     box-sizing: border-box;
 }
 
 .example-boundary {
-    min-height: 100px;
-    min-width: 300px;
     border: solid 1px;
+    margin-top: 24px;
 }
 
 .labelDetail {
-    margin-left: 24px;
+    margin: 24px 0 0 24px;
 }
 
 .modifyLabel {
-    min-height: 400px;
-    min-width: 300px;
-    border: solid 1px;
     margin-top: 10px;
+    width: 200px;
 }
 
 .labelForm {
+    min-width: 150px;
     margin: 0 8px 8px 8px;
+}
+
+.labelName {
+    display: flex;
+    flex-direction: column;
+}
+
+.selectSize {
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+}
+
+.icon {
+    margin-left: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 }

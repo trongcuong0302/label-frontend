@@ -1,0 +1,33 @@
+<!-- <div class="content">
+    <input class="input" nz-input placeholder="dpmm" [(ngModel)]="dpmm" />
+    <input class="input" nz-input placeholder="width" [(ngModel)]="width" />
+    <input class="input" nz-input placeholder="height" [(ngModel)]="height" />
+    <input class="input" nz-input placeholder="index" [(ngModel)]="index" />
+    <input class="input" nz-input placeholder="zplcode" [(ngModel)]="zplcode" />
+    <button class="button" nz-button nzType="primary" (click)="print()">Primary Button</button>
+</div> -->
+<div class="content">
+
+    <nz-table nzShowSizeChanger [nzData]="templateList" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+        <thead>
+            <tr>
+                <th nzColumnKey="templateName" [nzSortFn]="true">TemplateName</th>
+                <th nzColumnKey="labelName">LabelName</th>
+                <th nzColumnKey="height">Height (inch)</th>
+                <th nzColumnKey="width">Width (inch)</th>
+                <th colSpan="2" nzColumnKey="dpmm">Dpmm</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of templateList">
+                <td><a class="nameCol" [routerLink]="['/labels', data._id]">{{data.templateName}}</a></td>
+                <td>{{data.labelName}}</td>
+                <td>{{data.height}}</td>
+                <td>{{data.width}}</td>
+                <td>{{data.dpmm}}</td>
+                <td><i class="btn-delete" (click)="confirmDelete(data._id)" nz-icon nzType="delete" nzTheme="outline"></i></td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</div>

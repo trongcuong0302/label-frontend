@@ -1,0 +1,32 @@
+.input {
+    width: 200px;
+    margin-top: 10px;
+}
+
+.btn {
+    min-width: 100px;
+    margin: 10px 10px 0 0;
+}
+
+.select {
+    width: 200px;
+}
+
+.chooseTemplate.hide {
+    display: none;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+}
+
+.nameCol {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.btn-delete {
+    color: red;
+    cursor: pointer;
+    font-size: 16px;
+}

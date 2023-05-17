@@ -1,25 +1,28 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
-
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Label } from 'src/app/models/label.model';
 import { Template } from 'src/app/models/template.model';
-import { LabelService } from 'src/app/services/label.service';
+import { TemplateService } from 'src/app/services/template.service';
 
 @Component({
-  selector: 'app-label-list',
-  templateUrl: './label-list.component.html',
-  styleUrls: ['./label-list.component.scss']
+  selector: 'app-template-detail',
+  templateUrl: './template-detail.component.html',
+  styleUrls: ['./template-detail.component.scss']
 })
-export class LabelListComponent implements OnInit {
-  zplcode: string = '';
+export class TemplateDetailComponent implements OnInit {
+  isUpdated = false;
+  templateId: string = '';
+  zplCode: string = '';
   dpmm: number = 8;
+  dpmmList: number[] = [6,8,12,24];
 
   labelName: string= '';
   shouldShowTemplate: boolean = false;
   templateName: string = '';
-  templateNameList: Label['templateName'][] = [];
+  templateList: Template[] = [];
+  template: Template = {text: [], barcode: []};
   labelNameList = ['Barcode','Shipment'];
 
   widthBoundary: number = 610;
@@ -27,18 +30,20 @@ export class LabelListComponent implements OnInit {
   widthLabel: number = 3;
   heightLabel: number = 2;
 
-  textTemplates: Template['text'][] = [];
-  textLabel: Template['text'];
-  textName: string = 'Value';
+  textTemplates: Template['text'] = [];
+  textLabel = {textDescription: '',textSize: 0, textFont: '', textContent: '', positionX: 0, positionY: 0};
+  textDescription: string = 'Value';
   textSize: number = 21;
+  sizeList: number[] = [];
   textFont: string = 'monospace';
+  fontList: string[] = ['monospace'];
   textContent: string = 'Value';
   position = {x: 0, y: 0};
   isTextChoosen: boolean = false;
   isBarcodeChoosen: boolean = false;
 
-  barcodeTemplate: Template['barcode'][] = [];
-  barcodeLabel: Template['barcode'];
+  barcodeTemplate: Template['barcode'] = [];
+  barcodeLabel = {bcValue: '',bcType: '', bcHeight: 0, bcWidth: 0, bcTextSize: 0, bcTextFont: '', positionX: 0, positionY: 0};
   bcValue: string = 'Value';
   bcType: string = 'Code128';
   bcHeight: number = 50;
@@ -52,19 +57,36 @@ export class LabelListComponent implements OnInit {
   marginRight = 0;
 
   constructor (
-    private labelService: LabelService
-    ) {}
+    private notification: NzNotificationService,
+    private templateService: TemplateService,
+    private route: ActivatedRoute,
+    private router: Router) {
+    }
 
   ngOnInit(): void {
+    if(this.route.snapshot.params["id"] !== "add") {
+      this.isUpdated = true;
+      this.getTemplate(this.route.snapshot.params["id"]);
+    }
+    this.initSizeList();
   }
 
 
+  initSizeList(): void {
+    let i = 1;
+    this.sizeList.push(11);
+    while(i<20) {
+      this.sizeList.push(i*10 + 11);
+      i+=2;
+    }
+  }
+
   loadTemplateList(labelName: string): void {
-    let filter = [{labelType: labelName}];
-    this.labelService.getAllTemplate(filter).subscribe({
+    let filter = [{labelName: labelName}];
+    this.templateService.getAllTemplate(filter).subscribe({
       next: (resp) => {
-        this.templateNameList = resp.data;
-        if(this.templateNameList.length) {
+        this.templateList = resp.data;
+        if(this.templateList.length) {
           this.shouldShowTemplate = true;
         }
       },
@@ -78,16 +100,31 @@ export class LabelListComponent implements OnInit {
     this.loadTemplateList(this.labelName);
   }
 
-  onChangeTemplate(event: any): void {
-    this.templateName = event;
+  getTemplate(id: any): void {
+    this.templateService.getATemplate(id).subscribe({
+      next: (resp) => {
+        this.templateId = id;
+        this.template = resp.data;
+        this.dpmm = this.template.dpmm!;
+        this.heightLabel = this.template.height!;
+        this.widthLabel = this.template.width!;
+        this.barcodeTemplate = this.template.barcode;
+        this.textTemplates = this.template.text;
+        this.templateName = this.template.templateName!;
+        this.labelName = this.template.labelName!;
+        this.zplCode = this.template.zplCode!;
+        this.onChangeDensity();
+      },
+      error: (err) => console.log(err.error)
+    });
   }
 
   onChangeWidthBoundary(event: any) {
-    this.widthBoundary = event*this.dpmm*25.4+1; // 342 = 216 * 1.583 = 2.25 * (6*25.4) / 96
+    this.widthBoundary = event*this.dpmm*25.4+2; // 342 = 216 * 1.583 = 2.25 * (6*25.4) / 96
   }
 
   onChangeHeightBoundary(event: any) {
-    this.heightBoundary = event*this.dpmm*25.4+1;
+    this.heightBoundary = event*this.dpmm*25.4+2;
   }
 
   onChangeDensity() {
@@ -104,22 +141,31 @@ export class LabelListComponent implements OnInit {
       textTemplates: this.textTemplates
     };
 
-    this.labelService.generateALabel(data)
+    this.templateService.generateATemplate(data)
       .subscribe({
         next: (res) => {
-          console.log(res);
+          this.zplCode = res.data;
         },
         error: (err) => console.log(err.error.message)
       });
   }
 
+  copyZpl = async () => {
+    try {
+      await navigator.clipboard.writeText(this.zplCode);
+      this.notification.create('success','','ZPL code copied to clipboard');
+    } catch (err) {
+      this.notification.create('error','','ZPL code cannot be copied to clipboard');
+    }
+  }
+
   getTextLabel() {
-    return {textName: this.textName, textSize: this.textSize, textFont: this.textFont, textContent: this.textContent, positionX: this.position.x, positionY: this.position.y};
+    return {textDescription: this.textDescription, textSize: this.textSize, textFont: this.textFont, textContent: this.textContent, positionX: this.position.x, positionY: this.position.y};
   }
 
   addTextLabel(): void {
     let text = this.getTextLabel();
-    text.textName = "Value";
+    text.textDescription = "Value";
     text.textContent= "Value";
     text.positionX = 0;
     text.positionY = 0;
@@ -131,8 +177,8 @@ export class LabelListComponent implements OnInit {
       this.isTextChoosen = false;
       let index = this.textTemplates.indexOf(this.textLabel);
       if (index !== -1) {
-        this.textTemplates.splice(index, 1);
-        this.textLabel = {textName: '',textSize: 0, textFont: '', textContent: '', positionX: 0, positionY: 0};
+        this.textTemplates.splice(index!, 1);
+        this.textLabel = {textDescription: '',textSize: 0, textFont: '', textContent: '', positionX: 0, positionY: 0};
       }
     }
 
@@ -149,11 +195,11 @@ export class LabelListComponent implements OnInit {
   activateTextLabel(text: any, index: number): void {
     if(!text.textContent) text.textContent= "Value";
     this.textLabel = text;
-    this.textName = text.textName;
+    this.textDescription = text.textDescription;
     this.textSize = text.textSize;
     this.textFont = text.textFont;
     this.textContent = text.textContent;
-    this.position = {x: this.textTemplates[index]?.positionX!, y: this.textTemplates[index]?.positionY!};
+    this.position = {x: this.textTemplates[index].positionX!, y: this.textTemplates[index].positionY!};
     this.isTextChoosen = true;
     this.isBarcodeChoosen = false;
   }
@@ -179,14 +225,14 @@ export class LabelListComponent implements OnInit {
     this.bcWidth = barcode.bcWidth;
     this.bcTextSize = barcode.bcTextSize;
     this.bcTextFont = barcode.bcTextFont;
-    this.position = {x: this.barcodeTemplate[index]?.positionX!, y: this.barcodeTemplate[index]?.positionY!};
+    this.position = {x: this.barcodeTemplate[index].positionX!, y: this.barcodeTemplate[index].positionY!};
     this.isTextChoosen = false;
     this.isBarcodeChoosen = true;
     
   }
 
   onDragEnd(event: CdkDragEnd, item: any, index: number): void {
-    if(item.textName){
+    if(item.textDescription){
       this.activateTextLabel(item, index);
     }
     if(item.bcValue){
@@ -201,7 +247,7 @@ export class LabelListComponent implements OnInit {
   changeText(): void {
     if(this.isTextChoosen) {
       let text = this.getTextLabel();
-      let index = this.textTemplates.indexOf(this.textLabel);
+      let index = this.textTemplates?.indexOf(this.textLabel);
       if (index !== -1) {
         this.textLabel = text;
         this.textTemplates[index] = this.textLabel;
@@ -216,6 +262,43 @@ export class LabelListComponent implements OnInit {
         this.barcodeTemplate[index] = this.barcodeLabel;
       }
     }
+  }
+
+  getTemplateData() {
+    this.generateZpl();
+    const data = {
+      templateName: this.templateName,
+      labelName: this.labelName,
+      dpmm: this.dpmm,
+      height: this.heightLabel,
+      width: this.widthLabel,
+      barcode: this.barcodeTemplate,
+      text: this.textTemplates,
+      zplCode: this.zplCode
+    }
+    return data;
+  }
+
+  addTemplate(): void {
+    const data = this.getTemplateData();
+    this.templateService.postATemplate(data)
+      .subscribe({
+        next: (res) => {
+          this.router.navigate(['..'])
+        },
+        error: (err) => console.log(err.error)
+      });
+  }
+
+  updateTemplate(): void {
+    const data = this.getTemplateData();
+    this.templateService.updateTemplateById(this.templateId, data)
+      .subscribe({
+        next: (res) => {
+          this.router.navigate(['..'])
+        },
+        error: (err) => console.log(err.error)
+      });
   }
 
 }

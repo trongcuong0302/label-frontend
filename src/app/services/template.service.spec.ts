@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LabelService } from './label.service';
+import { TemplateService } from './template.service';
 
-describe('LabelService', () => {
-  let service: LabelService;
+describe('TemplateService', () => {
+  let service: TemplateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LabelService);
+    service = TestBed.inject(TemplateService);
   });
 
   it('should be created', () => {

@@ -1,6 +1,4 @@
 export class Label {
-    templateName?: {
-        labelName?: string;
-        labelType?: string;
-    };
+    id?: any;
+    labelName?: string;
 }

@@ -1,0 +1,101 @@
+<div class="content">
+    <div class="labelDetail">
+        <span><h3>Label detail</h3></span>
+        <div class="labelName">
+            <div class="form-row">
+                <div class="labelForm">
+                    <div class="labelFormInput">Template name</div>
+                    <input type="text" nz-input placeholder="Template name" id="templateName" [(ngModel)]="templateName" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Label name</div>
+                    <input type="text" nz-input placeholder="Label name" id="labelName" [(ngModel)]="labelName" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="labelForm">
+                    <div class="labelFormInput">Width (inch)</div>
+                    <input type="number" nz-input placeholder="Label width" [(ngModel)]="widthLabel" (ngModelChange)="onChangeWidthBoundary($event)" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Height (inch)</div>
+                    <input type="number" nz-input placeholder="Label height" [(ngModel)]="heightLabel" (ngModelChange)="onChangeHeightBoundary($event)" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Print density (dpmm)</div>
+                    <nz-select [(ngModel)]="dpmm" (ngModelChange)="onChangeDensity()" nzPlaceHolder="Print density">
+                        <nz-option *ngFor="let dpmm of dpmmList" [nzValue]="dpmm" [nzLabel]="dpmm"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div class="modifyLabel">
+            <span><h3>Modify Label</h3></span>
+            <div class="labelForm">
+                <div class="labelFormInput">ZPL code</div>
+                <div style="display: flex;">
+                    <input type="text" nz-input placeholder="ZPL code" [(ngModel)]="zplCode" (keyup)="changeText()" [disabled]="true" />
+                    <span class="icon" nz-icon nzType="copy" nzTheme="outline" (click)="copyZpl()"></span>
+                </div>
+            </div>
+            <div *ngIf="isTextChoosen" class="modifyForm">
+                <div class="labelForm">
+                    <div class="labelFormInput">Text Description</div>
+                    <input type="text" nz-input placeholder="Text Description" id="textDescription" [(ngModel)]="textDescription" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Text size</div>
+                    <nz-select class="selectSize" [(ngModel)]="textSize" (ngModelChange)="changeText()" nzPlaceHolder="Text size">
+                        <nz-option *ngFor="let size of sizeList" [nzValue]="size" [nzLabel]="size"></nz-option>
+                    </nz-select>
+                </div>
+                <!-- <div class="labelForm">
+                    <div class="labelFormInput">Text font</div>
+                    <nz-select [(ngModel)]="textFont" (ngModelChange)="changeText()" nzPlaceHolder="Text font">
+                        <nz-option *ngFor="let font of fontList" [nzValue]="font" [nzLabel]="font"></nz-option>
+                    </nz-select>
+                </div> -->
+                <div class="labelForm">
+                    <div class="labelFormInput">Text content</div>
+                    <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" />
+                </div>
+            </div>
+            <div *ngIf="isBarcodeChoosen" class="modifyForm">
+                <div class="labelForm">
+                    <div class="labelFormInput">Barcode value</div>
+                    <input type="text" nz-input placeholder="Barcode value" [(ngModel)]="bcValue" (keyup)="changeText()" />
+                </div>
+                <div class="labelForm">
+                    <div class="labelFormInput">Barcode height</div>
+                    <input type="number" nz-input placeholder="Barcode height" [(ngModel)]="bcHeight" (keyup)="changeText()" />
+                </div>
+
+            </div>
+        </div>
+        <div class="tool-design">
+            <button class="btn" nz-button nzType="primary" (click)="generateZpl()">Generate zpl</button>
+            <button class="btn" nz-button nzType="primary" (click)="addTemplate()">Add new template</button>
+            <button class="btn" nz-button nzType="primary" (click)="updateTemplate()" [ngStyle]="{'display': isUpdated ? '' : 'none'}">Update template</button>
+        </div>
+    </div>
+
+    <div class="label-design">
+        <span><h3>Label design</h3></span>
+        <div class="example-boundary" [ngStyle]="{'width.px': widthBoundary, 'height.px': heightBoundary}">
+            <div *ngFor="let text of textTemplates; let i=index" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: text?.positionX!, y:text?.positionY!}" [ngStyle]="{'font-size.px': text?.textSize, 'font-family': text?.textFont}"
+                (click)="activateTextLabel(text,i)" (cdkDragEnded)="onDragEnd($event,text,i)">
+                {{text?.textContent}}
+            </div>
+
+            <ngx-barcode *ngFor="let barcode of barcodeTemplate; let i=index" [bc-value]="barcode?.bcValue!" bc-format="CODE128B" [bc-display-value]="true" [bc-width]="barcode?.bcWidth!" [bc-height]="barcode?.bcHeight! || 1" [bc-font]="barcode?.bcTextFont!" [bc-font-size]="barcode?.bcTextSize!"
+                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" [bc-text-margin]="0" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
+                (click)="activateBarcodeLabel(barcode,i)" (cdkDragEnded)="onDragEnd($event,barcode,i)"></ngx-barcode>
+
+        </div>
+        <div class="tool-design">
+            <button class="btn" nz-button nzType="primary" (click)="addTextLabel()">Add text</button>
+            <button class="btn" nz-button nzType="primary" (click)="addBarcodeLabel()">Add barcode</button>
+            <button class="btn" nz-button nzType="primary" [disabled]="!isTextChoosen && !isBarcodeChoosen" (click)="remove()">Remove</button>
+        </div>
+    </div>
+</div>
