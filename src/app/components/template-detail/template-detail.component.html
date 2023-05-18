@@ -34,7 +34,7 @@
             <div class="labelForm">
                 <div class="labelFormInput">ZPL code</div>
                 <div style="display: flex;">
-                    <input type="text" nz-input placeholder="ZPL code" [(ngModel)]="zplCode" (keyup)="changeText()" [disabled]="true" />
+                    <span>{{displayZpl(zplCode)}}</span>
                     <span class="icon" nz-icon nzType="copy" nzTheme="outline" (click)="copyZpl()"></span>
                 </div>
             </div>
@@ -81,14 +81,14 @@
 
     <div class="label-design">
         <span><h3>Label design</h3></span>
-        <div class="example-boundary" [ngStyle]="{'width.px': widthBoundary, 'height.px': heightBoundary}">
-            <div *ngFor="let text of textTemplates; let i=index" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: text?.positionX!, y:text?.positionY!}" [ngStyle]="{'font-size.px': text?.textSize, 'font-family': text?.textFont}"
+        <div class="label-boundary" [ngStyle]="{'width.px': widthBoundary, 'height.px': heightBoundary}">
+            <div *ngFor="let text of textTemplate; let i=index" class="text-box" cdkDragBoundary=".label-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: text?.positionX!, y:text?.positionY!}" [ngStyle]="{'font-size.px': text?.textSize, 'font-family': text?.textFont}"
                 (click)="activateTextLabel(text,i)" (cdkDragEnded)="onDragEnd($event,text,i)">
                 {{text?.textContent}}
             </div>
 
             <ngx-barcode *ngFor="let barcode of barcodeTemplate; let i=index" [bc-value]="barcode?.bcValue!" bc-format="CODE128B" [bc-display-value]="true" [bc-width]="barcode?.bcWidth!" [bc-height]="barcode?.bcHeight! || 1" [bc-font]="barcode?.bcTextFont!" [bc-font-size]="barcode?.bcTextSize!"
-                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" [bc-text-margin]="0" class="example-box" cdkDragBoundary=".example-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
+                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" [bc-text-margin]="0" class="text-box" cdkDragBoundary=".label-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
                 (click)="activateBarcodeLabel(barcode,i)" (cdkDragEnded)="onDragEnd($event,barcode,i)"></ngx-barcode>
 
         </div>

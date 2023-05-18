@@ -14,23 +14,21 @@ import { TemplateService } from 'src/app/services/template.service';
 export class TemplateDetailComponent implements OnInit {
   isUpdated = false;
   templateId: string = '';
-  zplCode: string = '';
+  zplCode: string = '^XA^XZ';
   dpmm: number = 8;
   dpmmList: number[] = [6,8,12,24];
 
   labelName: string= '';
-  shouldShowTemplate: boolean = false;
   templateName: string = '';
   templateList: Template[] = [];
   template: Template = {text: [], barcode: []};
-  labelNameList = ['Barcode','Shipment'];
 
   widthBoundary: number = 610;
   heightBoundary: number = 407;
   widthLabel: number = 3;
   heightLabel: number = 2;
 
-  textTemplates: Template['text'] = [];
+  textTemplate: Template['text'] = [];
   textLabel = {textDescription: '',textSize: 0, textFont: '', textContent: '', positionX: 0, positionY: 0};
   textDescription: string = 'Value';
   textSize: number = 21;
@@ -86,18 +84,9 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.getAllTemplate(filter).subscribe({
       next: (resp) => {
         this.templateList = resp.data;
-        if(this.templateList.length) {
-          this.shouldShowTemplate = true;
-        }
       },
       error: (err) => console.log(err.error)
     });
-  }
-
-  onChangeLabel(event: any): void {
-    this.shouldShowTemplate = false;
-    this.labelName = event;
-    this.loadTemplateList(this.labelName);
   }
 
   getTemplate(id: any): void {
@@ -109,7 +98,7 @@ export class TemplateDetailComponent implements OnInit {
         this.heightLabel = this.template.height!;
         this.widthLabel = this.template.width!;
         this.barcodeTemplate = this.template.barcode;
-        this.textTemplates = this.template.text;
+        this.textTemplate = this.template.text;
         this.templateName = this.template.templateName!;
         this.labelName = this.template.labelName!;
         this.zplCode = this.template.zplCode!;
@@ -137,8 +126,8 @@ export class TemplateDetailComponent implements OnInit {
       dpmm: this.dpmm,
       height: this.heightLabel,
       width: this.widthLabel,
-      barcodeTemplates: this.barcodeTemplate,
-      textTemplates: this.textTemplates
+      barcodeTemplate: this.barcodeTemplate,
+      textTemplate: this.textTemplate
     };
 
     this.templateService.generateATemplate(data)
@@ -159,6 +148,11 @@ export class TemplateDetailComponent implements OnInit {
     }
   }
 
+  displayZpl(zpl: string) {
+    if (zpl.length<=20) return zpl;
+    return zpl.slice(0,10) + '...' + zpl.slice(-10);
+  }
+
   getTextLabel() {
     return {textDescription: this.textDescription, textSize: this.textSize, textFont: this.textFont, textContent: this.textContent, positionX: this.position.x, positionY: this.position.y};
   }
@@ -169,15 +163,15 @@ export class TemplateDetailComponent implements OnInit {
     text.textContent= "Value";
     text.positionX = 0;
     text.positionY = 0;
-    this.textTemplates.push(text);
+    this.textTemplate.push(text);
   }
 
   remove(): void {
     if(this.isTextChoosen){
       this.isTextChoosen = false;
-      let index = this.textTemplates.indexOf(this.textLabel);
+      let index = this.textTemplate.indexOf(this.textLabel);
       if (index !== -1) {
-        this.textTemplates.splice(index!, 1);
+        this.textTemplate.splice(index!, 1);
         this.textLabel = {textDescription: '',textSize: 0, textFont: '', textContent: '', positionX: 0, positionY: 0};
       }
     }
@@ -199,7 +193,7 @@ export class TemplateDetailComponent implements OnInit {
     this.textSize = text.textSize;
     this.textFont = text.textFont;
     this.textContent = text.textContent;
-    this.position = {x: this.textTemplates[index].positionX!, y: this.textTemplates[index].positionY!};
+    this.position = {x: this.textTemplate[index].positionX!, y: this.textTemplate[index].positionY!};
     this.isTextChoosen = true;
     this.isBarcodeChoosen = false;
   }
@@ -247,10 +241,10 @@ export class TemplateDetailComponent implements OnInit {
   changeText(): void {
     if(this.isTextChoosen) {
       let text = this.getTextLabel();
-      let index = this.textTemplates?.indexOf(this.textLabel);
+      let index = this.textTemplate?.indexOf(this.textLabel);
       if (index !== -1) {
         this.textLabel = text;
-        this.textTemplates[index] = this.textLabel;
+        this.textTemplate[index] = this.textLabel;
       }
     }
 
@@ -264,8 +258,7 @@ export class TemplateDetailComponent implements OnInit {
     }
   }
 
-  getTemplateData() {
-    this.generateZpl();
+  getTemplateData(){
     const data = {
       templateName: this.templateName,
       labelName: this.labelName,
@@ -273,7 +266,7 @@ export class TemplateDetailComponent implements OnInit {
       height: this.heightLabel,
       width: this.widthLabel,
       barcode: this.barcodeTemplate,
-      text: this.textTemplates,
+      text: this.textTemplate,
       zplCode: this.zplCode
     }
     return data;
@@ -284,6 +277,7 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.postATemplate(data)
       .subscribe({
         next: (res) => {
+          console.log(res);
           this.router.navigate(['..'])
         },
         error: (err) => console.log(err.error)
@@ -295,6 +289,7 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.updateTemplateById(this.templateId, data)
       .subscribe({
         next: (res) => {
+          console.log(res);
           this.router.navigate(['..'])
         },
         error: (err) => console.log(err.error)

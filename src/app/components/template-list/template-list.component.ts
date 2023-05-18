@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Label } from 'src/app/models/label.model';
+import { Router } from '@angular/router';
 import { Template } from 'src/app/models/template.model';
 import { TemplateService } from 'src/app/services/template.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -21,7 +22,8 @@ export class LabelListComponent implements OnInit {
 
   constructor (
     private templateService: TemplateService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private router: Router
     ) {}
 
   ngOnInit(): void {
@@ -57,9 +59,9 @@ export class LabelListComponent implements OnInit {
     this.loadTemplateList(pageIndex, pageSize, sortField, sortOrder);
   }
 
-  confirmDelete(templateId: any): void {
+  confirmDelete(templateId: any, templateName: string): void {
     this.modal.confirm({
-      nzTitle: 'Do you want to delete this template?',
+      nzTitle: `Do you want to delete this template: ${templateName}?`,
       nzOkText: 'Yes',
       nzOkType: 'primary',
       nzOkDanger: true,
@@ -77,6 +79,10 @@ export class LabelListComponent implements OnInit {
         error: (err) => console.log(err.error)
         
       });
+  }
+
+  addTemplate(): void {
+    this.router.navigate(['labels/add']);
   }
 
 }

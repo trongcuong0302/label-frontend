@@ -8,26 +8,32 @@
 </div> -->
 <div class="content">
 
-    <nz-table nzShowSizeChanger [nzData]="templateList" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
-        <thead>
-            <tr>
-                <th nzColumnKey="templateName" [nzSortFn]="true">TemplateName</th>
-                <th nzColumnKey="labelName">LabelName</th>
-                <th nzColumnKey="height">Height (inch)</th>
-                <th nzColumnKey="width">Width (inch)</th>
-                <th colSpan="2" nzColumnKey="dpmm">Dpmm</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let data of templateList">
-                <td><a class="nameCol" [routerLink]="['/labels', data._id]">{{data.templateName}}</a></td>
-                <td>{{data.labelName}}</td>
-                <td>{{data.height}}</td>
-                <td>{{data.width}}</td>
-                <td>{{data.dpmm}}</td>
-                <td><i class="btn-delete" (click)="confirmDelete(data._id)" nz-icon nzType="delete" nzTheme="outline"></i></td>
-            </tr>
-        </tbody>
-    </nz-table>
+    <div class="add">
+        <button class="btn" nz-button nzType="primary" (click)="addTemplate()">Add new template</button>
+    </div>
+
+    <div class="tableTemplate">
+        <nz-table nzShowSizeChanger [nzData]="templateList" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
+            <thead>
+                <tr>
+                    <th nzColumnKey="templateName" [nzSortFn]="true">TemplateName</th>
+                    <th nzColumnKey="labelName">LabelName</th>
+                    <th nzColumnKey="height">Height (inch)</th>
+                    <th nzColumnKey="width">Width (inch)</th>
+                    <th colSpan="2" nzColumnKey="dpmm">Dpmm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of templateList">
+                    <td><a class="nameCol" [routerLink]="['/labels', data._id]">{{data.templateName}}</a></td>
+                    <td>{{data.labelName}}</td>
+                    <td>{{data.height}}</td>
+                    <td>{{data.width}}</td>
+                    <td>{{data.dpmm}}</td>
+                    <td style="width: 50px;"><i class="btn-delete" (click)="confirmDelete(data._id, data.templateName!)" nz-icon nzType="delete" nzTheme="outline"></i></td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
 
 </div>
