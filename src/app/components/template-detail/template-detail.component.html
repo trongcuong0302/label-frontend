@@ -49,12 +49,6 @@
                         <nz-option *ngFor="let size of sizeList" [nzValue]="size" [nzLabel]="size"></nz-option>
                     </nz-select>
                 </div>
-                <!-- <div class="labelForm">
-                    <div class="labelFormInput">Text font</div>
-                    <nz-select [(ngModel)]="textFont" (ngModelChange)="changeText()" nzPlaceHolder="Text font">
-                        <nz-option *ngFor="let font of fontList" [nzValue]="font" [nzLabel]="font"></nz-option>
-                    </nz-select>
-                </div> -->
                 <div class="labelForm">
                     <div class="labelFormInput">Text content</div>
                     <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" />

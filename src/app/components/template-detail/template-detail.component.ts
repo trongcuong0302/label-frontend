@@ -34,7 +34,6 @@ export class TemplateDetailComponent implements OnInit {
   textSize: number = 21;
   sizeList: number[] = [];
   textFont: string = 'monospace';
-  fontList: string[] = ['monospace'];
   textContent: string = 'Value';
   position = {x: 0, y: 0};
   isTextChoosen: boolean = false;
@@ -109,7 +108,7 @@ export class TemplateDetailComponent implements OnInit {
   }
 
   onChangeWidthBoundary(event: any) {
-    this.widthBoundary = event*this.dpmm*25.4+2; // 342 = 216 * 1.583 = 2.25 * (6*25.4) / 96
+    this.widthBoundary = event*this.dpmm*25.4+2; 
   }
 
   onChangeHeightBoundary(event: any) {
@@ -149,8 +148,8 @@ export class TemplateDetailComponent implements OnInit {
   }
 
   displayZpl(zpl: string) {
-    if (zpl.length<=20) return zpl;
-    return zpl.slice(0,10) + '...' + zpl.slice(-10);
+    if (zpl.length<=18) return zpl;
+    return zpl.slice(0,9) + '...' + zpl.slice(-9);
   }
 
   getTextLabel() {
@@ -277,8 +276,8 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.postATemplate(data)
       .subscribe({
         next: (res) => {
-          console.log(res);
-          this.router.navigate(['..'])
+          //console.log(res);
+          this.router.navigate(['labels'])
         },
         error: (err) => console.log(err.error)
       });
@@ -289,8 +288,8 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.updateTemplateById(this.templateId, data)
       .subscribe({
         next: (res) => {
-          console.log(res);
-          this.router.navigate(['..'])
+          //console.log(res);
+          this.router.navigate(['labels'])
         },
         error: (err) => console.log(err.error)
       });
