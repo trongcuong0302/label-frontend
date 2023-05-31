@@ -1,0 +1,11 @@
+<div class="search-box">
+    <nz-input-group nzSearch [nzPrefix]="prefixIconButton" [nzSuffix]="suffixIconButton">
+        <input type="text" nz-input [(ngModel)]="searchKeyword" placeholder="Search by name" (keyup.enter)="search()" />
+    </nz-input-group>
+    <ng-template #prefixIconButton>
+        <div class="icon icon-search"><span nz-icon nzType="search" (click)="search()"></span></div>
+    </ng-template>
+    <ng-template #suffixIconButton>
+        <div *ngIf="searchKeyword" class="icon icon-close"><span nz-icon nzType="close-circle" nzTheme="fill" (click)="clear()"></span></div>
+    </ng-template>
+</div>

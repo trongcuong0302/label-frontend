@@ -1,15 +1,9 @@
-<!-- <div class="content">
-    <input class="input" nz-input placeholder="dpmm" [(ngModel)]="dpmm" />
-    <input class="input" nz-input placeholder="width" [(ngModel)]="width" />
-    <input class="input" nz-input placeholder="height" [(ngModel)]="height" />
-    <input class="input" nz-input placeholder="index" [(ngModel)]="index" />
-    <input class="input" nz-input placeholder="zplcode" [(ngModel)]="zplcode" />
-    <button class="button" nz-button nzType="primary" (click)="print()">Primary Button</button>
-</div> -->
 <div class="content">
-
-    <div class="add">
-        <button class="btn" nz-button nzType="primary" (click)="addTemplate()">Add new template</button>
+    <div class="header">
+        <search-box (doSearch)="searchTemplate($event)"></search-box>
+        <div class="add">
+            <button class="btn" nz-button nzType="primary" (click)="addTemplate()">Add new template</button>
+        </div>
     </div>
 
     <div class="tableTemplate">

@@ -20,7 +20,6 @@ export class TemplateDetailComponent implements OnInit {
 
   labelName: string= '';
   templateName: string = '';
-  templateList: Template[] = [];
   template: Template = {text: [], barcode: []};
 
   widthBoundary: number = 610;
@@ -78,16 +77,6 @@ export class TemplateDetailComponent implements OnInit {
     }
   }
 
-  loadTemplateList(labelName: string): void {
-    let filter = [{labelName: labelName}];
-    this.templateService.getAllTemplate(filter).subscribe({
-      next: (resp) => {
-        this.templateList = resp.data;
-      },
-      error: (err) => console.log(err.error)
-    });
-  }
-
   getTemplate(id: any): void {
     this.templateService.getATemplate(id).subscribe({
       next: (resp) => {
@@ -107,12 +96,12 @@ export class TemplateDetailComponent implements OnInit {
     });
   }
 
-  onChangeWidthBoundary(event: any) {
-    this.widthBoundary = event*this.dpmm*25.4+2; 
+  onChangeWidthBoundary(width: any) {
+    this.widthBoundary = width*this.dpmm*25.4+2; 
   }
 
-  onChangeHeightBoundary(event: any) {
-    this.heightBoundary = event*this.dpmm*25.4+2;
+  onChangeHeightBoundary(height: any) {
+    this.heightBoundary = height*this.dpmm*25.4+2;
   }
 
   onChangeDensity() {
@@ -276,7 +265,6 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.postATemplate(data)
       .subscribe({
         next: (res) => {
-          //console.log(res);
           this.router.navigate(['labels'])
         },
         error: (err) => console.log(err.error)
@@ -288,7 +276,6 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.updateTemplateById(this.templateId, data)
       .subscribe({
         next: (res) => {
-          //console.log(res);
           this.router.navigate(['labels'])
         },
         error: (err) => console.log(err.error)

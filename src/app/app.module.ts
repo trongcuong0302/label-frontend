@@ -23,12 +23,14 @@ registerLocaleData(en);
 import { AppComponent } from './app.component';
 import { LabelListComponent } from './components/template-list/template-list.component';
 import { TemplateDetailComponent } from './components/template-detail/template-detail.component';
+import { SearchBoxComponent } from './components/search-box/search-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LabelListComponent,
-    TemplateDetailComponent
+    TemplateDetailComponent,
+    SearchBoxComponent
   ],
   imports: [
     BrowserModule,

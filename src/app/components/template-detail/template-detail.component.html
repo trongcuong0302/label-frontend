@@ -82,7 +82,7 @@
             </div>
 
             <ngx-barcode *ngFor="let barcode of barcodeTemplate; let i=index" [bc-value]="barcode?.bcValue!" bc-format="CODE128B" [bc-display-value]="true" [bc-width]="barcode?.bcWidth!" [bc-height]="barcode?.bcHeight! || 1" [bc-font]="barcode?.bcTextFont!" [bc-font-size]="barcode?.bcTextSize!"
-                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" [bc-text-margin]="0" class="text-box" cdkDragBoundary=".label-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
+                [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight" class="text-box" cdkDragBoundary=".label-boundary" cdkDrag [cdkDragFreeDragPosition]="{x: barcode?.positionX!, y:barcode?.positionY!}"
                 (click)="activateBarcodeLabel(barcode,i)" (cdkDragEnded)="onDragEnd($event,barcode,i)"></ngx-barcode>
 
         </div>

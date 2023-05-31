@@ -16,6 +16,9 @@ export class LabelListComponent implements OnInit {
   loading = true;
   pageSize = 10;
   pageIndex = 1;
+  searchTemplateName = '';
+  sortField: string | null = '';
+  sortOrder: string | null = '';
 
   templateList: Template[] = [];
   labelNameList = [];
@@ -27,16 +30,17 @@ export class LabelListComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.loadTemplateList(this.pageIndex, this.pageSize, null, null);
+    this.loadTemplateList(this.pageIndex, this.pageSize, null, null, '');
   }
 
 
-  loadTemplateList(pageIndex: number, pageSize: number, sortField: string | null, sortOrder: string | null): void {
+  loadTemplateList(pageIndex: number, pageSize: number, sortField: string | null, sortOrder: string | null, searchTemplate: string): void {
     this.loading = true;
     let filter = [
       {field: "pageIndex", value: pageIndex, operator: "pagination"},
       {field: "pageSize", value: pageSize, operator: "pagination"},
       {field: sortField, value: sortOrder, operator: "sort"},
+      {field: "templateName", value: searchTemplate, operator: "includes"}
     ];
 
     this.templateService.getAllTemplate(filter).subscribe({
@@ -54,9 +58,9 @@ export class LabelListComponent implements OnInit {
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageSize, pageIndex, sort} = params;
     const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    const sortOrder = (currentSort && currentSort.value) || null;
-    this.loadTemplateList(pageIndex, pageSize, sortField, sortOrder);
+    this.sortField = (currentSort && currentSort.key) || null;
+    this.sortOrder = (currentSort && currentSort.value) || null;
+    this.loadTemplateList(pageIndex, pageSize, this.sortField, this.sortOrder, this.searchTemplateName);
   }
 
   confirmDelete(templateId: any, templateName: string): void {
@@ -74,7 +78,7 @@ export class LabelListComponent implements OnInit {
     this.templateService.deleteTemplateById(templateId)
       .subscribe({
         next: (res) => {
-          this.loadTemplateList(this.pageIndex, this.pageSize, null, null);
+          this.loadTemplateList(this.pageIndex, this.pageSize, this.sortField, this.sortOrder, '');
         },
         error: (err) => console.log(err.error)
         
@@ -83,6 +87,11 @@ export class LabelListComponent implements OnInit {
 
   addTemplate(): void {
     this.router.navigate(['labels/add']);
+  }
+
+  searchTemplate(templateName: any): void {
+    this.searchTemplateName = templateName;
+    this.loadTemplateList(this.pageIndex, this.pageSize, this.sortField, this.sortOrder, this.searchTemplateName);
   }
 
 }

@@ -18,6 +18,7 @@
 .content {
     display: flex;
     flex-direction: column;
+    padding: 24px;
 }
 
 .nameCol {
@@ -30,12 +31,13 @@
     font-size: 16px;
 }
 
-.add {
-    display: flex;
-    flex-direction: row-reverse;
-    padding: 24px;
+.tableTemplate {
+    padding: 24px 0;
 }
 
-.tableTemplate {
-    padding: 0 24px;
+.header {
+    display: flex;
+    padding: 24px 0;
+    align-items: flex-end;
+    justify-content: space-between;
 }
