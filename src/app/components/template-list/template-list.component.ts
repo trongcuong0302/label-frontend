@@ -47,9 +47,7 @@ export class LabelListComponent implements OnInit {
       next: (resp) => {
         this.total = resp.total;
         this.templateList = resp.data;
-        if(this.templateList.length) {
-          this.loading = false;
-        }
+        this.loading = false;
       },
       error: (err) => console.log(err.error)
     });

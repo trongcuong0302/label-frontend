@@ -1,38 +1,48 @@
 <div class="content">
     <div class="labelDetail">
         <span><h3>Label detail</h3></span>
-        <div class="labelName">
+        <form nz-form [formGroup]="templateInfoForm" class="labelName">
             <div class="form-row">
                 <div class="labelForm">
-                    <div class="labelFormInput">Template name</div>
-                    <input type="text" nz-input placeholder="Template name" id="templateName" [(ngModel)]="templateName" />
+                    <nz-form-label class="labelFormInput" nzRequired>Template name</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Template name" formControlName="templateName" />
+                    </nz-form-control>
                 </div>
                 <div class="labelForm">
-                    <div class="labelFormInput">Label name</div>
-                    <input type="text" nz-input placeholder="Label name" id="labelName" [(ngModel)]="labelName" />
+                    <nz-form-label class="labelFormInput" nzRequired>Label name</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Label name" formControlName="labelName" />
+                    </nz-form-control>
                 </div>
             </div>
             <div class="form-row">
                 <div class="labelForm">
-                    <div class="labelFormInput">Width (inch)</div>
-                    <input type="number" nz-input placeholder="Label width" [(ngModel)]="widthLabel" (ngModelChange)="onChangeWidthBoundary($event)" />
+                    <nz-form-label class="labelFormInput" nzRequired>Width (inch)</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Label width" formControlName="widthLabel" (ngModelChange)="onChangeWidthBoundary($event)" />
+                    </nz-form-control>
                 </div>
                 <div class="labelForm">
-                    <div class="labelFormInput">Height (inch)</div>
-                    <input type="number" nz-input placeholder="Label height" [(ngModel)]="heightLabel" (ngModelChange)="onChangeHeightBoundary($event)" />
+                    <nz-form-label class="labelFormInput" nzRequired>Height (inch)</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Label height" formControlName="heightLabel" (ngModelChange)="onChangeHeightBoundary($event)" />
+                    </nz-form-control>
                 </div>
                 <div class="labelForm">
-                    <div class="labelFormInput">Print density (dpmm)</div>
-                    <nz-select [(ngModel)]="dpmm" (ngModelChange)="onChangeDensity()" nzPlaceHolder="Print density">
-                        <nz-option *ngFor="let dpmm of dpmmList" [nzValue]="dpmm" [nzLabel]="dpmm"></nz-option>
-                    </nz-select>
+                    <nz-form-label class="labelFormInput" nzRequired>Print density (dpmm)</nz-form-label>
+                    <nz-form-control>
+                        <nz-select formControlName="dpmm" (ngModelChange)="onChangeDensity($event)" nzPlaceHolder="Print density">
+                            <nz-option *ngFor="let dpmm of dpmmList" [nzValue]="dpmm" [nzLabel]="dpmm"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
                 </div>
             </div>
-        </div>
+        </form>
         <div class="modifyLabel">
             <span><h3>Modify Label</h3></span>
             <div class="labelForm">
-                <div class="labelFormInput">ZPL code</div>
+                <div class="labelFormInput">ZPL code:</div>
                 <div style="display: flex;">
                     <span>{{displayZpl(zplCode)}}</span>
                     <span class="icon" nz-icon nzType="copy" nzTheme="outline" (click)="copyZpl()"></span>
@@ -44,13 +54,13 @@
                     <input type="text" nz-input placeholder="Text Description" id="textDescription" [(ngModel)]="textDescription" (keyup)="changeText()" />
                 </div>
                 <div class="labelForm">
-                    <div class="labelFormInput">Text size</div>
+                    <div class="labelFormInput">Text Size</div>
                     <nz-select class="selectSize" [(ngModel)]="textSize" (ngModelChange)="changeText()" nzPlaceHolder="Text size">
                         <nz-option *ngFor="let size of sizeList" [nzValue]="size" [nzLabel]="size"></nz-option>
                     </nz-select>
                 </div>
                 <div class="labelForm">
-                    <div class="labelFormInput">Text content</div>
+                    <div class="labelFormInput">Text Content</div>
                     <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" />
                 </div>
             </div>
@@ -67,9 +77,9 @@
             </div>
         </div>
         <div class="tool-design">
-            <button class="btn" nz-button nzType="primary" (click)="generateZpl()">Generate zpl</button>
-            <button class="btn" nz-button nzType="primary" (click)="addTemplate()">Add new template</button>
-            <button class="btn" nz-button nzType="primary" (click)="updateTemplate()" [ngStyle]="{'display': isUpdated ? '' : 'none'}">Update template</button>
+            <button class="btn" nz-button nzType="primary" [disabled]="!templateInfoForm.valid" (click)="generateZpl()">Generate zpl</button>
+            <button class="btn" nz-button nzType="primary" [disabled]="!templateInfoForm.valid" (click)="addTemplate()">Add new template</button>
+            <button class="btn" nz-button nzType="primary" [disabled]="!templateInfoForm.valid" (click)="updateTemplate()" [ngStyle]="{'display': isUpdated ? '' : 'none'}">Update template</button>
         </div>
     </div>
 

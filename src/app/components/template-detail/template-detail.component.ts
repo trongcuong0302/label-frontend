@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -12,6 +13,14 @@ import { TemplateService } from 'src/app/services/template.service';
   styleUrls: ['./template-detail.component.scss']
 })
 export class TemplateDetailComponent implements OnInit {
+  templateInfoForm: UntypedFormGroup = this.fb.group({
+    templateName: ['', [Validators.required]],
+    labelName: ['', [Validators.required]],
+    widthLabel: ['', [Validators.required]],
+    heightLabel: ['', [Validators.required]],
+    dpmm: ['', [Validators.required]]
+  });
+
   isUpdated = false;
   templateId: string = '';
   zplCode: string = '^XA^XZ';
@@ -53,6 +62,7 @@ export class TemplateDetailComponent implements OnInit {
   marginRight = 0;
 
   constructor (
+    private fb: UntypedFormBuilder,
     private notification: NzNotificationService,
     private templateService: TemplateService,
     private route: ActivatedRoute,
@@ -67,6 +77,15 @@ export class TemplateDetailComponent implements OnInit {
     this.initSizeList();
   }
 
+  setValueTemplateForm(): void {
+    this.templateInfoForm.setValue({
+      templateName: this.templateName,
+      labelName: this.labelName,
+      widthLabel: this.widthLabel,
+      heightLabel: this.heightLabel,
+      dpmm: this.dpmm
+    });
+  }
 
   initSizeList(): void {
     let i = 1;
@@ -90,7 +109,7 @@ export class TemplateDetailComponent implements OnInit {
         this.templateName = this.template.templateName!;
         this.labelName = this.template.labelName!;
         this.zplCode = this.template.zplCode!;
-        this.onChangeDensity();
+        this.setValueTemplateForm();
       },
       error: (err) => console.log(err.error)
     });
@@ -104,7 +123,8 @@ export class TemplateDetailComponent implements OnInit {
     this.heightBoundary = height*this.dpmm*25.4+2;
   }
 
-  onChangeDensity() {
+  onChangeDensity(dpmm: any) {
+    this.dpmm = dpmm;
     this.onChangeWidthBoundary(this.widthLabel);
     this.onChangeHeightBoundary(this.heightLabel);
   }
@@ -214,7 +234,7 @@ export class TemplateDetailComponent implements OnInit {
   }
 
   onDragEnd(event: CdkDragEnd, item: any, index: number): void {
-    if(item.textDescription){
+    if(item.textContent){
       this.activateTextLabel(item, index);
     }
     if(item.bcValue){
