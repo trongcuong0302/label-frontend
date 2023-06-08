@@ -19,7 +19,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let data of templateList">
-                    <td><a class="nameCol" [routerLink]="['/labels', data._id]">{{data.templateName}}</a></td>
+                    <td><a class="nameCol" [routerLink]="['/templates', data._id]">{{data.templateName}}</a></td>
                     <td>{{data.labelName}}</td>
                     <td>{{data.height}}</td>
                     <td>{{data.width}}</td>

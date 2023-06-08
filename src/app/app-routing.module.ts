@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LabelListComponent } from './components/template-list/template-list.component';
+import { TemplateListComponent } from './components/template-list/template-list.component';
 import { TemplateDetailComponent } from './components/template-detail/template-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/labels', pathMatch: 'full' },
-  { path: 'labels', component: LabelListComponent },
-  { path: 'labels/:id', component: TemplateDetailComponent },
-  { path: 'labels/add', component: TemplateDetailComponent },
+  { path: '', redirectTo: '/templates', pathMatch: 'full' },
+  { path: 'templates', component: TemplateListComponent },
+  { path: 'templates/:id', component: TemplateDetailComponent },
+  { path: 'templates/add', component: TemplateDetailComponent },
 ];
 
 @NgModule({

@@ -11,7 +11,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   templateUrl: './template-list.component.html',
   styleUrls: ['./template-list.component.scss']
 })
-export class LabelListComponent implements OnInit {
+export class TemplateListComponent implements OnInit {
   total = 1;
   loading = true;
   pageSize = 10;

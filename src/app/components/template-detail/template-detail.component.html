@@ -1,42 +1,42 @@
 <div class="content">
     <div class="labelDetail">
         <span><h3>Label detail</h3></span>
-        <form nz-form [formGroup]="templateInfoForm" class="labelName">
+        <form nz-form [formGroup]="templateInfoForm" nzLayout="vertical" class="labelName">
             <div class="form-row">
-                <div class="labelForm">
+                <nz-form-item class="labelForm">
                     <nz-form-label class="labelFormInput" nzRequired>Template name</nz-form-label>
                     <nz-form-control>
                         <input type="text" nz-input placeholder="Template name" formControlName="templateName" />
                     </nz-form-control>
-                </div>
-                <div class="labelForm">
+                </nz-form-item>
+                <nz-form-item class="labelForm">
                     <nz-form-label class="labelFormInput" nzRequired>Label name</nz-form-label>
                     <nz-form-control>
                         <input type="text" nz-input placeholder="Label name" formControlName="labelName" />
                     </nz-form-control>
-                </div>
+                </nz-form-item>
             </div>
             <div class="form-row">
-                <div class="labelForm">
+                <nz-form-item class="labelForm">
                     <nz-form-label class="labelFormInput" nzRequired>Width (inch)</nz-form-label>
                     <nz-form-control>
                         <input type="text" nz-input placeholder="Label width" formControlName="widthLabel" (ngModelChange)="onChangeWidthBoundary($event)" />
                     </nz-form-control>
-                </div>
-                <div class="labelForm">
+                </nz-form-item>
+                <nz-form-item class="labelForm">
                     <nz-form-label class="labelFormInput" nzRequired>Height (inch)</nz-form-label>
                     <nz-form-control>
                         <input type="text" nz-input placeholder="Label height" formControlName="heightLabel" (ngModelChange)="onChangeHeightBoundary($event)" />
                     </nz-form-control>
-                </div>
-                <div class="labelForm">
+                </nz-form-item>
+                <nz-form-item class="labelForm">
                     <nz-form-label class="labelFormInput" nzRequired>Print density (dpmm)</nz-form-label>
                     <nz-form-control>
                         <nz-select formControlName="dpmm" (ngModelChange)="onChangeDensity($event)" nzPlaceHolder="Print density">
                             <nz-option *ngFor="let dpmm of dpmmList" [nzValue]="dpmm" [nzLabel]="dpmm"></nz-option>
                         </nz-select>
                     </nz-form-control>
-                </div>
+                </nz-form-item>
             </div>
         </form>
         <div class="modifyLabel">
@@ -48,33 +48,55 @@
                     <span class="icon" nz-icon nzType="copy" nzTheme="outline" (click)="copyZpl()"></span>
                 </div>
             </div>
-            <div *ngIf="isTextChoosen" class="modifyForm">
-                <div class="labelForm">
-                    <div class="labelFormInput">Text Description</div>
-                    <input type="text" nz-input placeholder="Text Description" id="textDescription" [(ngModel)]="textDescription" (keyup)="changeText()" />
-                </div>
-                <div class="labelForm">
-                    <div class="labelFormInput">Text Size</div>
-                    <nz-select class="selectSize" [(ngModel)]="textSize" (ngModelChange)="changeText()" nzPlaceHolder="Text size">
+            <form nz-form [formGroup]="textInfoForm" nzLayout="vertical" *ngIf="isTextChoosen" class="modifyForm">
+                <nz-form-item class="labelForm">
+                    <nz-form-label class="labelFormInput">Text Description</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Text Description" formControlName="textDescription" (keyup)="changeText()" />
+                    </nz-form-control>
+                    <!-- <div class="labelFormInput">Text Description</div> -->
+                    <!-- <input type="text" nz-input placeholder="Text Description" id="textDescription" [(ngModel)]="textDescription" (keyup)="changeText()" /> -->
+                </nz-form-item>
+                <nz-form-item class="labelForm">
+                    <nz-form-label class="labelFormInput" nzRequired>Text size</nz-form-label>
+                    <nz-form-control>
+                        <nz-select class="selectSize" formControlName="textSize" (ngModelChange)="changeText()" nzPlaceHolder="Text size">
+                            <nz-option *ngFor="let size of sizeList" [nzValue]="size" [nzLabel]="size"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                    <!-- <div class="labelFormInput">Text Size</div> -->
+                    <!-- <nz-select class="selectSize" [(ngModel)]="textSize" (ngModelChange)="changeText()" nzPlaceHolder="Text size">
                         <nz-option *ngFor="let size of sizeList" [nzValue]="size" [nzLabel]="size"></nz-option>
-                    </nz-select>
-                </div>
-                <div class="labelForm">
-                    <div class="labelFormInput">Text Content</div>
-                    <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" />
-                </div>
-            </div>
-            <div *ngIf="isBarcodeChoosen" class="modifyForm">
-                <div class="labelForm">
-                    <div class="labelFormInput">Barcode value</div>
-                    <input type="text" nz-input placeholder="Barcode value" [(ngModel)]="bcValue" (keyup)="changeText()" />
-                </div>
-                <div class="labelForm">
-                    <div class="labelFormInput">Barcode height</div>
-                    <input type="number" nz-input placeholder="Barcode height" [(ngModel)]="bcHeight" (keyup)="changeText()" />
-                </div>
+                    </nz-select> -->
+                </nz-form-item>
+                <nz-form-item class="labelForm">
+                    <nz-form-label class="labelFormInput" nzRequired>Text content</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Text content" formControlName="textContent" (keyup)="changeText()" />
+                    </nz-form-control>
+                    <!-- <div class="labelFormInput">Text Content</div> -->
+                    <!-- <input type="text" nz-input placeholder="Text content" [(ngModel)]="textContent" (keyup)="changeText()" /> -->
+                </nz-form-item>
+            </form>
+            <form nz-form [formGroup]="barcodeInfoForm" nzLayout="vertical" *ngIf="isBarcodeChoosen" class="modifyForm">
+                <nz-form-item class="labelForm">
+                    <nz-form-label class="labelFormInput" nzRequired>Barcode value</nz-form-label>
+                    <nz-form-control>
+                        <input type="text" nz-input placeholder="Barcode value" formControlName="bcValue" (keyup)="changeText()" />
+                    </nz-form-control>
+                    <!-- <div class="labelFormInput">Barcode value</div>
+                    <input type="text" nz-input placeholder="Barcode value" [(ngModel)]="bcValue" (keyup)="changeText()" /> -->
+                </nz-form-item>
+                <nz-form-item class="labelForm">
+                    <nz-form-label class="labelFormInput" nzRequired>Barcode height</nz-form-label>
+                    <nz-form-control>
+                        <input type="number" nz-input placeholder="Barcode height" formControlName="bcHeight" (keyup)="changeText()" />
+                    </nz-form-control>
+                    <!-- <div class="labelFormInput">Barcode height</div>
+                    <input type="number" nz-input placeholder="Barcode height" [(ngModel)]="bcHeight" (keyup)="changeText()" /> -->
+                </nz-form-item>
 
-            </div>
+            </form>
         </div>
         <div class="tool-design">
             <button class="btn" nz-button nzType="primary" [disabled]="!templateInfoForm.valid" (click)="generateZpl()">Generate zpl</button>

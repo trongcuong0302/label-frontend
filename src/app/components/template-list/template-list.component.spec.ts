@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LabelListComponent } from './template-list.component';
+import { TemplateListComponent } from './template-list.component';
 
 describe('LabelListComponent', () => {
-  let component: LabelListComponent;
-  let fixture: ComponentFixture<LabelListComponent>;
+  let component: TemplateListComponent;
+  let fixture: ComponentFixture<TemplateListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LabelListComponent ]
+      declarations: [ TemplateListComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LabelListComponent);
+    fixture = TestBed.createComponent(TemplateListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

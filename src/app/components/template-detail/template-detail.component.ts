@@ -21,6 +21,17 @@ export class TemplateDetailComponent implements OnInit {
     dpmm: ['', [Validators.required]]
   });
 
+  textInfoForm: UntypedFormGroup = this.fb.group({
+    textDescription: [''],
+    textSize: ['', [Validators.required]],
+    textContent: ['', [Validators.required]]
+  });
+
+  barcodeInfoForm: UntypedFormGroup = this.fb.group({
+    bcValue: ['', [Validators.required]],
+    bcHeight: [0, [Validators.required]]
+  });
+
   isUpdated = false;
   templateId: string = '';
   zplCode: string = '^XA^XZ';
@@ -84,6 +95,22 @@ export class TemplateDetailComponent implements OnInit {
       widthLabel: this.widthLabel,
       heightLabel: this.heightLabel,
       dpmm: this.dpmm
+    });
+  }
+
+  setValueTextForm(): void {
+    this.textInfoForm.setValue({
+      textDescription: this.textDescription,
+      textSize: this.textSize,
+      textContent: this.textContent
+    });
+    this.changeText();
+  }
+
+  setValueBarcodeForm(): void {
+    this.barcodeInfoForm.setValue({
+      bcValue: this.bcValue,
+      bcHeight: this.bcHeight
     });
   }
 
@@ -204,6 +231,7 @@ export class TemplateDetailComponent implements OnInit {
     this.position = {x: this.textTemplate[index].positionX!, y: this.textTemplate[index].positionY!};
     this.isTextChoosen = true;
     this.isBarcodeChoosen = false;
+    this.setValueTextForm();
   }
 
   getBarcodeLabel() {
@@ -230,7 +258,7 @@ export class TemplateDetailComponent implements OnInit {
     this.position = {x: this.barcodeTemplate[index].positionX!, y: this.barcodeTemplate[index].positionY!};
     this.isTextChoosen = false;
     this.isBarcodeChoosen = true;
-    
+    this.setValueBarcodeForm();
   }
 
   onDragEnd(event: CdkDragEnd, item: any, index: number): void {
@@ -248,6 +276,9 @@ export class TemplateDetailComponent implements OnInit {
 
   changeText(): void {
     if(this.isTextChoosen) {
+      this.textDescription = this.textInfoForm.controls['textDescription'].value;
+      this.textSize = this.textInfoForm.controls['textSize'].value;
+      this.textContent = this.textInfoForm.controls['textContent'].value;
       let text = this.getTextLabel();
       let index = this.textTemplate?.indexOf(this.textLabel);
       if (index !== -1) {
@@ -257,6 +288,8 @@ export class TemplateDetailComponent implements OnInit {
     }
 
     if(this.isBarcodeChoosen) {
+      this.bcValue = this.barcodeInfoForm.controls['bcValue'].value;
+      this.bcHeight = this.barcodeInfoForm.controls['bcHeight'].value;
       let barcode = this.getBarcodeLabel();
       let index = this.barcodeTemplate.indexOf(this.barcodeLabel);
       if (index !== -1) {
@@ -268,8 +301,8 @@ export class TemplateDetailComponent implements OnInit {
 
   getTemplateData(){
     const data = {
-      templateName: this.templateName,
-      labelName: this.labelName,
+      templateName: this.templateInfoForm.controls['templateName'].value,
+      labelName: this.templateInfoForm.controls['labelName'].value,
       dpmm: this.dpmm,
       height: this.heightLabel,
       width: this.widthLabel,
@@ -285,7 +318,7 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.postATemplate(data)
       .subscribe({
         next: (res) => {
-          this.router.navigate(['labels'])
+          this.router.navigate(['templates'])
         },
         error: (err) => console.log(err.error)
       });
@@ -296,7 +329,7 @@ export class TemplateDetailComponent implements OnInit {
     this.templateService.updateTemplateById(this.templateId, data)
       .subscribe({
         next: (res) => {
-          this.router.navigate(['labels'])
+          this.router.navigate(['templates'])
         },
         error: (err) => console.log(err.error)
       });
